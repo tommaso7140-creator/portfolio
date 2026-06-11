@@ -10,6 +10,7 @@ const projects = [
     status: 'Live',
     statusColor: '#4ade80',
     color: '#f97316',
+    href: '', // ajouter le lien ici quand prêt
   },
   {
     label: 'TitanWear — Email Marketing',
@@ -18,6 +19,7 @@ const projects = [
     status: 'En cours',
     statusColor: '#f97316',
     color: '#8b5cf6',
+    href: '', // ajouter le lien ici quand prêt
   },
   {
     label: 'Projet 3',
@@ -26,6 +28,7 @@ const projects = [
     status: 'À venir',
     statusColor: '#ffffff30',
     color: '#60a5fa',
+    href: '',
     placeholder: true,
   },
   {
@@ -35,6 +38,7 @@ const projects = [
     status: 'À venir',
     statusColor: '#ffffff30',
     color: '#4ade80',
+    href: '',
     placeholder: true,
   },
 ]
@@ -58,57 +62,83 @@ export default function Projects() {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-5">
-          {projects.map((p, i) => (
-            <motion.div
-              key={p.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className={`rounded-2xl border p-8 flex flex-col min-h-52 transition-all ${
-                p.placeholder
-                  ? 'border-dashed items-center justify-center text-center'
-                  : 'border-white/6 hover:border-white/12 bg-[#080920]'
-              }`}
-              style={{ borderColor: p.placeholder ? `${p.color}20` : undefined }}
-            >
-              {p.placeholder ? (
-                <>
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
-                    style={{ background: `${p.color}10` }}
-                  >
-                    <span className="text-xl font-thin" style={{ color: `${p.color}40` }}>+</span>
-                  </div>
-                  <p className="text-white/25 text-sm font-medium">{p.label}</p>
-                  <p className="text-white/15 text-xs mt-1">{p.desc}</p>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <h3 className="text-base font-black tracking-tight leading-tight">{p.label}</h3>
+          {projects.map((p, i) => {
+            const isClickable = !!p.href
+
+            const cardContent = p.placeholder ? (
+              <>
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
+                  style={{ background: `${p.color}10` }}
+                >
+                  <span className="text-xl font-thin" style={{ color: `${p.color}40` }}>+</span>
+                </div>
+                <span className="text-white/25 text-sm font-medium">{p.label}</span>
+                <span className="text-white/15 text-xs mt-1">{p.desc}</span>
+              </>
+            ) : (
+              <>
+                <div className="flex items-start justify-between gap-3 mb-4">
+                  <h3 className="text-base font-black tracking-tight leading-tight">{p.label}</h3>
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <span
-                      className="text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0"
+                      className="text-xs font-bold px-2.5 py-1 rounded-full"
                       style={{ background: `${p.statusColor}15`, color: p.statusColor }}
                     >
                       {p.status}
                     </span>
+                    {isClickable && (
+                      <span className="text-white/30 group-hover:text-white/70 transition-colors text-sm">↗</span>
+                    )}
                   </div>
-                  <p className="text-white/45 text-sm leading-relaxed flex-1 mb-5">{p.desc}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {p.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs px-2.5 py-1 rounded bg-white/4 text-white/35 border border-white/5"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                </div>
+                <p className="text-white/45 text-sm leading-relaxed flex-1 mb-5">{p.desc}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {p.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-xs px-2.5 py-1 rounded bg-white/4 text-white/35 border border-white/5"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )
+
+            const className = [
+              'rounded-2xl border p-8 flex flex-col min-h-52 transition-all group',
+              p.placeholder
+                ? 'border-dashed items-center justify-center text-center'
+                : 'border-white/6 bg-[#080920]',
+              isClickable
+                ? 'hover:border-orange-500/40 hover:bg-[#0d0f25] cursor-pointer'
+                : p.placeholder
+                ? ''
+                : 'hover:border-white/12',
+            ].join(' ')
+
+            return (
+              <motion.div
+                key={p.label}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                style={{ borderColor: p.placeholder ? `${p.color}20` : undefined }}
+              >
+                {isClickable ? (
+                  <a href={p.href} target="_blank" rel="noopener noreferrer" className={`${className} block`}>
+                    {cardContent}
+                  </a>
+                ) : (
+                  <div className={className}>
+                    {cardContent}
                   </div>
-                </>
-              )}
-            </motion.div>
-          ))}
+                )}
+              </motion.div>
+            )
+          })}
         </div>
 
         <motion.div
